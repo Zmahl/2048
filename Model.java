@@ -126,24 +126,33 @@ public class Model extends Observable {
         int row = t.row();
         int col = t.col();
 
-        for (int i = -1; i <= 1; i++){
+        /** Checks the grid box to the left and right of the current box */
+        for (int i = -1; i <= 1; i++) {
             int col_inc = col + i;
-            System.out.println(col_inc);
-            if (col_inc < 0 || col_inc >= b.size() || col_inc == 0){
+
+            if (col_inc < 0 || col_inc >= b.size()) {
                 continue;
             }
-            for (int j = -1; j < col + 1; j++){
-                int row_inc = row + j;
-                System.out.println(row_inc);
-                if (row_inc < 0 || row_inc >= b.size() || row_inc == 0){
-                    continue;
-                }
-                System.out.print("val " + val);
-                System.out.println(" b.tile " + b.tile(row_inc, col_inc).value());
-                if (b.tile(row_inc, col_inc).value() == val){
-                    return true;
+
+            if (col_inc != col && b.tile(row, col_inc).value() == val){
+                return true;
+            }
+
+            /** When the counter increments to the current box, check the upper and lower box */
+            if (col_inc == col) {
+                for (int j = -1; j <= 1; j++){
+                    int row_inc = row + j;
+
+                    if (row_inc < 0 || row_inc == row || row_inc >= b.size()){
+                        continue;
+                    }
+
+                    if (b.tile(row_inc, col_inc).value() == val) {
+                        return true;
+                    }
                 }
             }
+
         }
 
         return false;
